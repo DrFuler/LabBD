@@ -232,55 +232,6 @@ INSERT INTO tbl_estudante (ra, ensino_medio, ano_conclusao, pessoa_id) VALUES
 (112358, "Colegio Fibonacci", 2004, '54523707227'),
 (123456, "Colegio ABC", 2005, '77426047792');
 
-
--- ----------------------------------------------------------------------------
--- Atividade Complementar
--- Criado por: Rodrigo Teixeira Garcia (5A)
-
-DROP TABLE IF EXISTS tbl_atividade_complementar;
-CREATE TABLE IF NOT EXISTS tbl_atividade_complementar (
-    tipo VARCHAR(50) NOT NULL,
-    descricao VARCHAR(100) NOT NULL,
-    carga_horaria INT NOT NULL,
-    id INT NOT NULL,
-    ra_ativ INT NOT NULL,
-    codigo_disciplina VARCHAR(20),
-    CONSTRAINT fk_disciplina FOREIGN KEY (codigo_disciplina) REFERENCES tbl_disciplina (codigo),
-    FOREIGN KEY (ra_ativ)
-        REFERENCES tbl_estudante (ra),
-    PRIMARY KEY (id, ra_ativ)
-);
-
--- View para contagem das atividades complementares
-DROP view IF EXISTS v_atividade_numero;
-CREATE OR REPLACE view v_atividade_numero
-AS
-  SELECT tipo AS tipo,
-         Count(*)     AS qtd_ativ
-  FROM   tbl_atividade_complementar
-  GROUP  BY tipo;
-
-
--- View para exibição de qual atividade cada aluno realiza
-DROP view IF EXISTS v_atividade_aluno;
-CREATE OR replace VIEW v_atividade_aluno
-AS
-  SELECT a.tipo,
-         e.ra
-  FROM   tbl_atividade_complementar AS a,
-         tbl_estudante AS e
-  WHERE  a.ra_ativ = e.ra;
-
-INSERT INTO tbl_atividade_complementar(tipo, descricao, carga_horaria, id, ra_ativ) VALUES
-("Empresa Júnior", "Empresa ambientada no contexto universitário", 60, 1, 524896),
-("Atlética", "Organização que visa eventos de integração entre os alunos", 40, 1, 425169),
-("DCE", "Diretório Central dos Estudantes. Órgão para representação dos estudantes", 60, 1, 334578),
-("PET", "Programa de Ensino Tutorial. Desenvolvimento de projetos com auxílio de bolsa e supervisionado", 60, 1, 123456),
-("IC", "Iniciação Científica. Desenvolvimento de projeto com auxílio ou não de bolsa", 60, 1, 654321);
-
-INSERT INTO tbl_atividade_complementar(tipo, descricao, carga_horaria, id, ra_ativ, codigo_disciplina) VALUES
-("ACIEPE", "Inclusão Digital", 60, 2, 334578, '100.054-0');
-
 -- ----------------------------------------------------------------------------
 -- Departamento
 -- Criado por: Rodrigo Teixeira Garcia (5A)
@@ -348,6 +299,54 @@ INSERT INTO tbl_disciplina (codigo, nome, ementa, creditosTeoricos, creditosPrat
 ('02.034-6', 'Teoria dos Grafos', '', 4, 0, "DC");
 ('02.034-6', 'Teoria dos Grafos', '', 4, 0, "DC");
 ('100.054-0', 'ACIEPE - Inclusão Digital', '', 0, 4, "DC");
+
+-- ----------------------------------------------------------------------------
+-- Atividade Complementar
+-- Criado por: Rodrigo Teixeira Garcia (5A)
+
+DROP TABLE IF EXISTS tbl_atividade_complementar;
+CREATE TABLE IF NOT EXISTS tbl_atividade_complementar (
+    tipo VARCHAR(50) NOT NULL,
+    descricao VARCHAR(100) NOT NULL,
+    carga_horaria INT NOT NULL,
+    id INT NOT NULL,
+    ra_ativ INT NOT NULL,
+    codigo_disciplina VARCHAR(20),
+    CONSTRAINT fk_disciplina FOREIGN KEY (codigo_disciplina) REFERENCES tbl_disciplina (codigo),
+    FOREIGN KEY (ra_ativ)
+        REFERENCES tbl_estudante (ra),
+    PRIMARY KEY (id, ra_ativ)
+);
+
+-- View para contagem das atividades complementares
+DROP view IF EXISTS v_atividade_numero;
+CREATE OR REPLACE view v_atividade_numero
+AS
+  SELECT tipo AS tipo,
+         Count(*)     AS qtd_ativ
+  FROM   tbl_atividade_complementar
+  GROUP  BY tipo;
+
+
+-- View para exibição de qual atividade cada aluno realiza
+DROP view IF EXISTS v_atividade_aluno;
+CREATE OR replace VIEW v_atividade_aluno
+AS
+  SELECT a.tipo,
+         e.ra
+  FROM   tbl_atividade_complementar AS a,
+         tbl_estudante AS e
+  WHERE  a.ra_ativ = e.ra;
+
+INSERT INTO tbl_atividade_complementar(tipo, descricao, carga_horaria, id, ra_ativ) VALUES
+("Empresa Júnior", "Empresa ambientada no contexto universitário", 60, 1, 524896),
+("Atlética", "Organização que visa eventos de integração entre os alunos", 40, 1, 425169),
+("DCE", "Diretório Central dos Estudantes. Órgão para representação dos estudantes", 60, 1, 334578),
+("PET", "Programa de Ensino Tutorial. Desenvolvimento de projetos com auxílio de bolsa e supervisionado", 60, 1, 123456),
+("IC", "Iniciação Científica. Desenvolvimento de projeto com auxílio ou não de bolsa", 60, 1, 654321);
+
+INSERT INTO tbl_atividade_complementar(tipo, descricao, carga_horaria, id, ra_ativ, codigo_disciplina) VALUES
+("ACIEPE", "Inclusão Digital", 60, 2, 334578, '100.054-0');
 
 -- ----------------------------------------------------------------------------
 -- Técnico Administrativo
